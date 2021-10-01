@@ -1,7 +1,7 @@
 <?php
     function showHeader($page) {
         echo '<div class="header">
-                <a href="/DZ1/"><img class="logoPHP" src="/DZ1//image/PHP.png" alt="PHP"></a>
+                <a href="/DZ1/"><img class="logoPHP" src="/DZ1/image/PHP.png" alt="PHP"></a>
                 <a href="/DZ1/"><h1 data-text="Домашняя работа №1">Домашняя работа №1</h1></a>
                 <ul class="themes">
                     <li><a class="pages" href="/DZ1/php/conditions.php">Условия</a></li>

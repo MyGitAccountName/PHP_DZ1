@@ -24,12 +24,14 @@
         </form>';
     }
 
-    function hideTaskList() {
-        echo '<script>document.getElementById("form1").style.display = "none";</script>';
+    function isInteger($v1) {
+        if (ctype_digit($v1) || (ctype_digit(substr($v1, 1)) && ((mb_substr($v1, $i, 1) == '-') || (mb_substr($v1, $i, 1) == '+')))) {
+            return true;
+        }
+        return false;
     }
 
     function task1($v1) {
-        hideTaskList();
         echo '
             <h3>Проверка переменной на чётность</h3>
             <form action="conditions.php" method="POST">   
@@ -39,13 +41,12 @@
             </form>
             ';       
         if (!is_numeric($v1)) return $v1 ." - вообще не число!";
-        else if ($v1 - intval($v1) != 0) return $v1 ." - не целое число!";
-        else if ($v1 % 2 === 0) return $v1 ." - чётное число";
+        else if (!isInteger($v1)) return $v1 ." - не целое число!";
+        else if (substr($v1, -1) % 2 === 0) return $v1 ." - чётное число";
         else return $v1 ." - нечётное число";
     }
 
     function task2($v1,$v2) {
-        hideTaskList();
         echo '
             <h3>Большее из двух чисел</h3>
             <form action="conditions.php" method="POST">   
@@ -62,7 +63,6 @@
     }
     
     function task3($v1) {
-        hideTaskList();
         echo '
             <h3>Модуль числа</h3>
             <form action="conditions.php" method="POST">   
@@ -77,7 +77,6 @@
     }
     
     function task4($v1,$v2,$v3) {
-        hideTaskList();
         echo '
             <h3>Квадрат числа из диапазона</h3>
             <form action="conditions.php" method="POST">
@@ -104,7 +103,6 @@
     }
 
     function task5($v1) {
-        hideTaskList();
         echo '
             <h3>Вывод заголовка</h3>
             <form action="conditions.php" method="POST">
@@ -114,7 +112,7 @@
             </form>
             ';
         if (!is_numeric($v1)) echo '<p class="result">'.$v1.' - не число!';
-        else if ($v1 - intval($v1) != 0) echo '<p class="result">'.$v1 .' - не целое число!';
+        else if (!isInteger($v1)) echo '<p class="result">'.$v1 .' - не целое число!';
         else if ($v1 < 1 || $v1 > 6) echo '<p class="result">Нельзя построить тег '.htmlspecialchars('<h'.$v1.'>');
         else echo '<div class="resTask5"><h'.$v1.'>Заголовок '.$v1.'</h'.$v1.'></div>';
     }
@@ -124,7 +122,6 @@
         $season = "Лето. ";
         $half = "Середина";
         $names = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-        hideTaskList();
         echo '
             <h3>Время года</h3>
             <form action="conditions.php" method="POST">
@@ -134,9 +131,7 @@
             <input class="task-button" type="button" value="Назад" onClick="document.location=\'conditions.php\'">
             </form>
             ';
-        if (!(is_numeric($v1) && is_numeric($v2)) ||
-        ($v1 - intval($v1) != 0) || ($v2 - intval($v2) != 0) ||
-        $v1 < 1 || $v2 < 1) return "Ошибка в данных!";
+        if (!isInteger($v1) || !isInteger($v2) || $v1 < 1 || $v2 < 1) return "Ошибка в данных!";
         else if ($v2 > 12) return "Нет такого месяца!";
         else {
             switch ($v2) {
@@ -196,9 +191,8 @@
         ';
     }
     function task7($v1,$v2,$v3) {
-        $degrees = [-3,1,10,20,30,40,50,60,70,80];
+        $degrees = [-2,1,10,20,30,40,50,60,70,80];
         $names = ["б","Б","КБ","МБ","ГБ","ТБ","ПБ","ЭБ","ЗБ","ЙБ"];
-        hideTaskList();
         echo '
             <h3>Конвертер единиц памяти</h3>
             <form action="conditions.php" method="POST">
@@ -224,10 +218,8 @@
     <?php
         include 'header.php';
         showHeader(1);
-    ?>
-    <h2>УСЛОВИЯ</h2>
-    <?php
-        if (!isset($_POST["choose"])) {
+        echo "<h2>УСЛОВИЯ</h2>";
+        if (empty($_POST)) {
             showTaskList();
         }
         if (isset($_POST["choose"])) {
@@ -245,7 +237,7 @@
                     task4(0,0,0,0);
                     break;
                 case 5:
-                    task5(1);
+                    task5('1');
                     break;
                 case 6:
                     task6(1,1);
@@ -255,7 +247,6 @@
                     break;
             }
         }
-
         if (isset($_POST["do-it"])) {
             $data1 = $_POST['var1'];
             $data2 = $_POST['var2'];

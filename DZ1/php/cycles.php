@@ -19,12 +19,14 @@
         </form>';
     }
 
-    function hideTaskList() {
-        echo '<script>document.getElementById("form1").style.display = "none";</script>';
+    function isInteger($v1) {
+        if (ctype_digit($v1) || (ctype_digit(substr($v1, 1)) && ((mb_substr($v1, $i, 1) == '-') || (mb_substr($v1, $i, 1) == '+')))) {
+            return true;
+        }
+        return false;
     }
 
     function task1() {
-        hideTaskList();
         $kol = 1;
         $tmp = 2;
         $sum = 0;
@@ -32,7 +34,9 @@
         $result = '';
         echo '<h3>Первые 10 чётных чисел:</h3>';
         while ($kol <= 10) {
-            if ($kol===10) $zap = ";";
+            if ($kol===10) {
+                $zap = ";";
+            }
             $result = $result."<span style='font-size: ".($kol*5)."px; color: green;'>".$tmp.$zap."</span>";
             $sum += $tmp;
             $tmp += 2;
@@ -44,7 +48,6 @@
     }
 
     function task2($v1) {
-        hideTaskList();
         echo '
             <h3>Проверка числа на простоту</h3>
             <form action="cycles.php" method="POST">
@@ -55,19 +58,18 @@
             ';
         if (!is_numeric($v1)) return $v1 ." - вообще не число!";
         else if ($v1 == 1) return $v1 ." - ни простое, ни составное число";
-        else if ($v1 - intval($v1) != 0 || $v1 < 1) return $v1 ." - не натуральное число!";
+        else if (!isInteger($v1) || $v1 < 1) return $v1 ." - не натуральное число!";
         else {
             $j = 0;
             for ($i=1; $i<=$v1; $i++) {
                 if ($v1%$i == 0) $j++;
+                if ($j > 2) return $v1 ." - составное число";
             }
-            if ($j == 2) return $v1 ." - простое число";
-            else return $v1 ." - составное число";
+            return $v1 ." - простое число";
         }
     }
 
     function task3() {
-        hideTaskList();
         $diam = 20;
         echo '
             <style>
@@ -90,14 +92,9 @@
     }
 
     function task4() {
-        hideTaskList();
         $f1 = 0;
         $f2 = 0;
-
-        $zap = ", ";
-        $result = '';
         echo '<h3>Четырёхзначные числа</h3>';
-
         for ($i = 1000; $i < 10000; $i++) {
             $symbols = str_split(strval($i));
             if (($symbols[0] == $symbols[1]) && ($symbols[0] == $symbols[2]) && ($symbols[0] == $symbols[3])) {
@@ -125,7 +122,6 @@
     }
 
     function task5($v1) {
-        hideTaskList();
         echo '
             <h3>Перевод числа в двоичную систему</h3>
             <form action="cycles.php" method="POST">
@@ -168,7 +164,6 @@
     }
 
     function task6() {
-        hideTaskList();
         $white = true;
         echo '
             <h3>Шахматы</h3>
@@ -241,14 +236,12 @@
     <?php
         include 'header.php';
         showHeader(2);
-    ?>
-    <h2>ЦИКЛЫ</h2>
-    <?php
-        if (!isset($_POST["choose"])) {
+        echo "<h2>ЦИКЛЫ</h2>";
+        if (empty($_POST)) {
             showTaskList();
         }
         if (isset($_POST["choose"])) {
-            echo '<script>  document.getElementById("form1").style.display = "none";   </script>';
+            echo '<script> document.getElementById("form1").style.display = "none"; </script>';
             switch ($_POST['choose']) {
                 case 2:
                     task2(0);
@@ -261,7 +254,6 @@
                     break;
             }
         }
-    
         if (isset($_POST["do-it"])) {
             $data1 = $_POST['var1'];
 
@@ -286,8 +278,6 @@
                     break;
             }
         }
-
-
     ?>
 </body>
 </html>
